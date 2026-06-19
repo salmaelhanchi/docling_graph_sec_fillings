@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, cast
 
 from pydantic import BaseModel, ValidationError
+from rich import print as rich_print
 
 from ...gleaning import build_already_found_summary_delta
 from .catalog import build_delta_node_catalog, reattach_orphans
@@ -170,6 +171,26 @@ class DeltaOrchestrator:
         self._on_trace = on_trace
         self._catalog = build_delta_node_catalog(template)
 
+    def _log_progress(self, message: str) -> None:
+        rich_print(f"[blue][DeltaExtraction][/blue] {message}")
+
+    @staticmethod
+    def _batch_stats(batch: list[tuple[int, str, int]]) -> dict[str, Any]:
+        chunk_ids = [chunk_id for chunk_id, _chunk, _tokens in batch]
+        token_total = sum(tokens for _chunk_id, _chunk, tokens in batch)
+        return {
+            "chunk_count": len(batch),
+            "token_total": token_total,
+            "first_chunk": min(chunk_ids) if chunk_ids else None,
+            "last_chunk": max(chunk_ids) if chunk_ids else None,
+        }
+
+    @staticmethod
+    def _batch_label(batch_index: int, total_batches: int) -> str:
+        if 0 <= batch_index < total_batches:
+            return f"{batch_index + 1}/{total_batches}"
+        return f"split-{batch_index}"
+
     def _write_debug_json(self, file_name: str, payload: Any) -> None:
         if not self._debug_dir:
             return
@@ -191,6 +212,15 @@ class DeltaOrchestrator:
         global_context: str | None = None,
         already_found: str | None = None,
     ) -> tuple[int, dict[str, Any] | None, list[str], float]:
+        stats = self._batch_stats(batch)
+        label = self._batch_label(batch_index, total_batches)
+        self._log_progress(
+            "Batch "
+            f"[cyan]{label}[/cyan] started "
+            f"([cyan]{stats['chunk_count']}[/cyan] chunks, "
+            f"[cyan]{stats['token_total']}[/cyan] tokens, "
+            f"chunk ids [cyan]{stats['first_chunk']}..{stats['last_chunk']}[/cyan])"
+        )
         batch_markdown = format_batch_markdown([chunk for _, chunk, _ in batch])
         delta_schema_json = json.dumps(DeltaGraph.model_json_schema(), indent=2)
 
@@ -208,6 +238,11 @@ class DeltaOrchestrator:
 
         last_parsed: dict | list | None = None
         for attempt in range(self._config.max_pass_retries + 1):
+            if attempt > 0:
+                self._log_progress(
+                    f"Batch [cyan]{label}[/cyan] retry "
+                    f"[cyan]{attempt}/{self._config.max_pass_retries}[/cyan]"
+                )
             call_prompt = prompt
             if attempt > 0 and errors:
                 feedback = "\n".join(f"- {err}" for err in errors[:15])
@@ -245,6 +280,15 @@ class DeltaOrchestrator:
                         },
                     )
                 elapsed = time.time() - start
+                node_count = len(validated.nodes or [])
+                relationship_count = len(validated.relationships or [])
+                self._log_progress(
+                    "Batch "
+                    f"[cyan]{label}[/cyan] finished in "
+                    f"[cyan]{elapsed:.1f}s[/cyan] "
+                    f"([cyan]{node_count}[/cyan] nodes, "
+                    f"[cyan]{relationship_count}[/cyan] relationships)"
+                )
                 return batch_index, validated.model_dump(), [], elapsed
             except ValidationError as exc:
                 errors = []
@@ -265,6 +309,11 @@ class DeltaOrchestrator:
                     "errors": errors,
                 },
             )
+        self._log_progress(
+            "Batch "
+            f"[cyan]{label}[/cyan] failed after "
+            f"[cyan]{elapsed:.1f}s[/cyan] with [cyan]{len(errors)}[/cyan] validation errors"
+        )
         return batch_index, None, errors, elapsed
 
     def _quality_gate(
@@ -493,10 +542,26 @@ class DeltaOrchestrator:
             token_counts,
             max_batch_tokens=self._config.llm_batch_token_size,
         )
+        total_tokens = sum(token_counts)
+        max_tokens = max(token_counts) if token_counts else 0
+        min_tokens = min(token_counts) if token_counts else 0
+        avg_tokens = total_tokens / len(token_counts) if token_counts else 0.0
+        self._log_progress(
+            "Planned "
+            f"[cyan]{len(chunks)}[/cyan] chunks into [cyan]{len(batch_plan)}[/cyan] "
+            f"LLM batches with limit [cyan]{self._config.llm_batch_token_size}[/cyan] tokens "
+            f"(tokens total=[cyan]{total_tokens}[/cyan], "
+            f"avg=[cyan]{avg_tokens:.1f}[/cyan], min=[cyan]{min_tokens}[/cyan], "
+            f"max=[cyan]{max_tokens}[/cyan], workers=[cyan]{self._config.parallel_workers}[/cyan])"
+        )
 
         schema_dict = self._template.model_json_schema()
         semantic_guide = build_delta_semantic_guide(self._template, schema_dict)
         catalog_block = build_catalog_prompt_block(self._catalog)
+        self._log_progress(
+            "Prepared delta schema catalog with "
+            f"[cyan]{len(self._catalog.paths)}[/cyan] paths"
+        )
         global_context: str | None = None
         if chunks:
             first_chunk = chunks[0].strip()
@@ -516,6 +581,9 @@ class DeltaOrchestrator:
         split_failures = 0
 
         if self._config.parallel_workers > 1 and len(batch_plan) > 1:
+            self._log_progress(
+                f"Starting first pass with [cyan]{self._config.parallel_workers}[/cyan] workers"
+            )
             with ThreadPoolExecutor(max_workers=self._config.parallel_workers) as pool:
                 futures = {
                     pool.submit(
@@ -539,6 +607,7 @@ class DeltaOrchestrator:
                     elif errors:
                         failed_batches.append((batch_idx, batch_plan[original_batch_idx], errors))
         else:
+            self._log_progress("Starting first pass sequential batch extraction")
             for i, batch in enumerate(batch_plan):
                 batch_idx, graph_dict, errors, elapsed = self._run_one_batch(
                     batch_index=i,
@@ -555,8 +624,19 @@ class DeltaOrchestrator:
                 elif errors:
                     failed_batches.append((batch_idx, batch, errors))
 
+        self._log_progress(
+            "First pass complete: "
+            f"[cyan]{len(successful_results)}[/cyan] successful, "
+            f"[cyan]{len(failed_batches)}[/cyan] failed"
+        )
+
         split_round = 0
         while failed_batches and split_round < self._config.batch_split_max_retries:
+            self._log_progress(
+                "Starting split retry round "
+                f"[cyan]{split_round + 1}/{self._config.batch_split_max_retries}[/cyan] "
+                f"for [cyan]{len(failed_batches)}[/cyan] failed batches"
+            )
             next_failed_batches: list[tuple[int, list[tuple[int, str, int]], list[str]]] = []
             for parent_idx, failed_batch, failed_errors in failed_batches:
                 if len(failed_batch) <= 1:
@@ -593,14 +673,26 @@ class DeltaOrchestrator:
             failed_batches = next_failed_batches
             split_round += 1
 
+        if batch_split_retries:
+            self._log_progress(
+                "Split retries complete: "
+                f"[cyan]{batch_split_retries}[/cyan] split attempts, "
+                f"[cyan]{split_failures + len(failed_batches)}[/cyan] remaining failures"
+            )
+
         if failed_batches:
             split_failures += len(failed_batches)
             for failed_idx, _failed_batch, failed_errors in failed_batches:
                 batch_errors[failed_idx] = failed_errors
 
         if not successful_results:
+            self._log_progress("No successful delta batches; returning no result")
             return None
 
+        self._log_progress(
+            "Normalizing and merging "
+            f"[cyan]{len(successful_results)}[/cyan] successful batch graphs"
+        )
         dedup_policy = build_dedup_policy(self._catalog)
         normalized_batch_results, normalizer_stats = normalize_delta_ir_batch_results(
             batch_results=successful_results,
@@ -615,6 +707,10 @@ class DeltaOrchestrator:
 
         # Optional gleaning pass: run batches again with "already found" in prompt, merge extra results
         if self._config.gleaning_enabled and self._config.gleaning_max_passes >= 1:
+            self._log_progress(
+                "Starting delta gleaning pass over "
+                f"[cyan]{len(batch_plan)}[/cyan] batches"
+            )
             already_found = build_already_found_summary_delta(merged_graph)
             gleaning_results: list[dict[str, Any]] = []
             gleaning_batch_plan: list[list[tuple[int, str, int]]] = []
@@ -631,6 +727,10 @@ class DeltaOrchestrator:
                 if graph_dict is not None:
                     gleaning_results.append(graph_dict)
                     gleaning_batch_plan.append(batch)
+            self._log_progress(
+                "Delta gleaning pass complete: "
+                f"[cyan]{len(gleaning_results)}[/cyan] successful batch graphs"
+            )
             if gleaning_results:
                 normalized_gleaning, _ = normalize_delta_ir_batch_results(
                     batch_results=gleaning_results,
@@ -646,6 +746,7 @@ class DeltaOrchestrator:
                 )
                 sanitize_batch_echo_from_graph(merged_graph)
 
+        self._log_progress("Resolving duplicates, filtering identities, and projecting graph")
         merge_core_stats = (
             merged_graph.get("__merge_stats", {})
             if isinstance(merged_graph.get("__merge_stats"), dict)
@@ -768,6 +869,10 @@ class DeltaOrchestrator:
             self._on_trace(trace)
 
         if not quality_ok:
+            self._log_progress(
+                "Quality gate failed: "
+                f"[yellow]{', '.join(quality_reasons)}[/yellow]"
+            )
             logger.warning(
                 "[DeltaExtraction] Quality gate failed: %s | path_counts=%s | normalizer_stats=%s",
                 ", ".join(quality_reasons),
@@ -776,4 +881,9 @@ class DeltaOrchestrator:
             )
             return None
 
+        self._log_progress(
+            "Delta extraction complete: "
+            f"[cyan]{sum(path_counts.values())}[/cyan] graph nodes across "
+            f"[cyan]{len(path_counts)}[/cyan] paths"
+        )
         return merged_root
