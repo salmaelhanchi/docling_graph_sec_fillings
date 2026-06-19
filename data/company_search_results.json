@@ -1,0 +1,287 @@
+{
+  "missing": [],
+  "queries": {
+    "10-K:post_2021": [
+      {
+        "matches": [
+          {
+            "cik": 320193,
+            "ticker": "AAPL",
+            "title": "Apple Inc."
+          },
+          {
+            "cik": 1418121,
+            "ticker": "APLE",
+            "title": "Apple Hospitality REIT, Inc."
+          },
+          {
+            "cik": 1134982,
+            "ticker": "AAPI",
+            "title": "Apple iSports Group, Inc."
+          },
+          {
+            "cik": 63330,
+            "ticker": "MLP",
+            "title": "MAUI LAND & PINEAPPLE CO INC"
+          },
+          {
+            "cik": 1938109,
+            "ticker": "PAPL",
+            "title": "Pineapple Financial Inc."
+          },
+          {
+            "cik": 1084869,
+            "ticker": "FLWS",
+            "title": "1 800 FLOWERS COM INC"
+          },
+          {
+            "cik": 1770787,
+            "ticker": "TXG",
+            "title": "10x Genomics, Inc."
+          },
+          {
+            "cik": 1738906,
+            "ticker": "YI",
+            "title": "111, Inc."
+          }
+        ],
+        "query": "Apple Inc."
+      }
+    ],
+    "10-K:pre_2021": [
+      {
+        "matches": [
+          {
+            "cik": 320193,
+            "ticker": "AAPL",
+            "title": "Apple Inc."
+          },
+          {
+            "cik": 1418121,
+            "ticker": "APLE",
+            "title": "Apple Hospitality REIT, Inc."
+          },
+          {
+            "cik": 1134982,
+            "ticker": "AAPI",
+            "title": "Apple iSports Group, Inc."
+          },
+          {
+            "cik": 63330,
+            "ticker": "MLP",
+            "title": "MAUI LAND & PINEAPPLE CO INC"
+          },
+          {
+            "cik": 1938109,
+            "ticker": "PAPL",
+            "title": "Pineapple Financial Inc."
+          },
+          {
+            "cik": 1084869,
+            "ticker": "FLWS",
+            "title": "1 800 FLOWERS COM INC"
+          },
+          {
+            "cik": 1770787,
+            "ticker": "TXG",
+            "title": "10x Genomics, Inc."
+          },
+          {
+            "cik": 1738906,
+            "ticker": "YI",
+            "title": "111, Inc."
+          }
+        ],
+        "query": "Apple Inc."
+      }
+    ],
+    "10-Q:post_2021": [
+      {
+        "matches": [
+          {
+            "cik": 320193,
+            "ticker": "AAPL",
+            "title": "Apple Inc."
+          },
+          {
+            "cik": 1418121,
+            "ticker": "APLE",
+            "title": "Apple Hospitality REIT, Inc."
+          },
+          {
+            "cik": 1134982,
+            "ticker": "AAPI",
+            "title": "Apple iSports Group, Inc."
+          },
+          {
+            "cik": 63330,
+            "ticker": "MLP",
+            "title": "MAUI LAND & PINEAPPLE CO INC"
+          },
+          {
+            "cik": 1938109,
+            "ticker": "PAPL",
+            "title": "Pineapple Financial Inc."
+          },
+          {
+            "cik": 1084869,
+            "ticker": "FLWS",
+            "title": "1 800 FLOWERS COM INC"
+          },
+          {
+            "cik": 1770787,
+            "ticker": "TXG",
+            "title": "10x Genomics, Inc."
+          },
+          {
+            "cik": 1738906,
+            "ticker": "YI",
+            "title": "111, Inc."
+          }
+        ],
+        "query": "Apple Inc."
+      }
+    ],
+    "10-Q:pre_2021": [
+      {
+        "matches": [
+          {
+            "cik": 320193,
+            "ticker": "AAPL",
+            "title": "Apple Inc."
+          },
+          {
+            "cik": 1418121,
+            "ticker": "APLE",
+            "title": "Apple Hospitality REIT, Inc."
+          },
+          {
+            "cik": 1134982,
+            "ticker": "AAPI",
+            "title": "Apple iSports Group, Inc."
+          },
+          {
+            "cik": 63330,
+            "ticker": "MLP",
+            "title": "MAUI LAND & PINEAPPLE CO INC"
+          },
+          {
+            "cik": 1938109,
+            "ticker": "PAPL",
+            "title": "Pineapple Financial Inc."
+          },
+          {
+            "cik": 1084869,
+            "ticker": "FLWS",
+            "title": "1 800 FLOWERS COM INC"
+          },
+          {
+            "cik": 1770787,
+            "ticker": "TXG",
+            "title": "10x Genomics, Inc."
+          },
+          {
+            "cik": 1738906,
+            "ticker": "YI",
+            "title": "111, Inc."
+          }
+        ],
+        "query": "Apple Inc."
+      }
+    ],
+    "20-F:post_2021": [
+      {
+        "matches": [
+          {
+            "cik": 1577552,
+            "ticker": "BABA",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1577552,
+            "ticker": "BABAF",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1577552,
+            "ticker": "BBAAY",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1546538,
+            "ticker": "BTGRF",
+            "title": "BTS Group Holdings Public Co Limited/ADR"
+          },
+          {
+            "cik": 1546538,
+            "ticker": "BTLWF",
+            "title": "BTS Group Holdings Public Co Limited/ADR"
+          },
+          {
+            "cik": 1569963,
+            "ticker": "LTGHY",
+            "title": "Life Healthcare Group Holdings Limited/ADR"
+          },
+          {
+            "cik": 1569963,
+            "ticker": "LTGHF",
+            "title": "Life Healthcare Group Holdings Limited/ADR"
+          },
+          {
+            "cik": 1705402,
+            "ticker": "AGMH",
+            "title": "AGM GROUP HOLDINGS, INC."
+          }
+        ],
+        "query": "Alibaba Group Holding Limited"
+      }
+    ],
+    "20-F:pre_2021": [
+      {
+        "matches": [
+          {
+            "cik": 1577552,
+            "ticker": "BABA",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1577552,
+            "ticker": "BABAF",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1577552,
+            "ticker": "BBAAY",
+            "title": "Alibaba Group Holding Ltd"
+          },
+          {
+            "cik": 1546538,
+            "ticker": "BTGRF",
+            "title": "BTS Group Holdings Public Co Limited/ADR"
+          },
+          {
+            "cik": 1546538,
+            "ticker": "BTLWF",
+            "title": "BTS Group Holdings Public Co Limited/ADR"
+          },
+          {
+            "cik": 1569963,
+            "ticker": "LTGHY",
+            "title": "Life Healthcare Group Holdings Limited/ADR"
+          },
+          {
+            "cik": 1569963,
+            "ticker": "LTGHF",
+            "title": "Life Healthcare Group Holdings Limited/ADR"
+          },
+          {
+            "cik": 1705402,
+            "ticker": "AGMH",
+            "title": "AGM GROUP HOLDINGS, INC."
+          }
+        ],
+        "query": "Alibaba Group Holding Limited"
+      }
+    ]
+  }
+}

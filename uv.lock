@@ -1282,6 +1282,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
+    { name = "requests" },
     { name = "rich" },
     { name = "typer" },
 ]
@@ -1357,6 +1358,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0,<2.0" },
     { name = "pyyaml", specifier = ">=6.0,<7.0" },
     { name = "rapidfuzz", marker = "extra == 'delta-resolvers'" },
+    { name = "requests", specifier = ">=2.33.1" },
     { name = "rich", specifier = ">=13,<16" },
     { name = "spacy", marker = "extra == 'delta-resolvers'" },
     { name = "typer", extras = ["all"], specifier = ">=0.12,<1.0.0" },

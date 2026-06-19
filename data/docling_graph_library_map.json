@@ -1,0 +1,746 @@
+{
+  "core_option_matrix": {
+    "backend": [
+      "llm",
+      "vlm"
+    ],
+    "docling_config": [
+      "ocr",
+      "vision"
+    ],
+    "dump_to_disk": [
+      true,
+      false,
+      null
+    ],
+    "export_format": [
+      "csv",
+      "cypher"
+    ],
+    "extraction_contract": [
+      "direct",
+      "staged",
+      "delta"
+    ],
+    "inference": [
+      "local",
+      "remote"
+    ],
+    "processing_mode": [
+      "one-to-one",
+      "many-to-one"
+    ],
+    "reverse_edges": [
+      true,
+      false
+    ],
+    "structured_output": [
+      true,
+      false
+    ],
+    "use_chunking": [
+      true,
+      false
+    ]
+  },
+  "notes": [
+    "VLM only supports local inference.",
+    "SEC URLs are accepted as URL inputs and downloaded by docling-graph before conversion.",
+    "Remote LLM presets require the relevant provider API key.",
+    "Local LLM presets require the local model server, such as Ollama or vLLM."
+  ],
+  "pipeline_config_fields": [
+    {
+      "annotation": "str | pathlib.Path",
+      "default": "",
+      "description": "Path to the source document",
+      "literal_values": [
+        "<class 'str'>",
+        "<class 'pathlib.Path'>"
+      ],
+      "name": "source",
+      "required": false
+    },
+    {
+      "annotation": "str | type[pydantic.main.BaseModel]",
+      "default": "",
+      "description": "Pydantic template class or dotted path string",
+      "literal_values": [
+        "<class 'str'>",
+        "type[pydantic.main.BaseModel]"
+      ],
+      "name": "template",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['llm', 'vlm']",
+      "default": "llm",
+      "description": "",
+      "literal_values": [
+        "llm",
+        "vlm"
+      ],
+      "name": "backend",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['local', 'remote']",
+      "default": "local",
+      "description": "",
+      "literal_values": [
+        "local",
+        "remote"
+      ],
+      "name": "inference",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['one-to-one', 'many-to-one']",
+      "default": "many-to-one",
+      "description": "",
+      "literal_values": [
+        "one-to-one",
+        "many-to-one"
+      ],
+      "name": "processing_mode",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['direct', 'staged', 'delta']",
+      "default": "direct",
+      "description": "",
+      "literal_values": [
+        "direct",
+        "staged",
+        "delta"
+      ],
+      "name": "extraction_contract",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['ocr', 'vision']",
+      "default": "ocr",
+      "description": "",
+      "literal_values": [
+        "ocr",
+        "vision"
+      ],
+      "name": "docling_config",
+      "required": false
+    },
+    {
+      "annotation": "str | None",
+      "default": null,
+      "description": "",
+      "literal_values": [
+        "<class 'str'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "model_override",
+      "required": false
+    },
+    {
+      "annotation": "str | None",
+      "default": null,
+      "description": "",
+      "literal_values": [
+        "<class 'str'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "provider_override",
+      "required": false
+    },
+    {
+      "annotation": "typing.Any | None",
+      "default": null,
+      "description": "Custom LLM client instance to use for LLM backend.",
+      "literal_values": [
+        "typing.Any",
+        "<class 'NoneType'>"
+      ],
+      "name": "llm_client",
+      "required": false
+    },
+    {
+      "annotation": "<class 'docling_graph.config.ModelsConfig'>",
+      "default": "PydanticUndefined",
+      "description": "",
+      "literal_values": [],
+      "name": "models",
+      "required": false
+    },
+    {
+      "annotation": "<class 'docling_graph.llm_clients.config.LlmRuntimeOverrides'>",
+      "default": "PydanticUndefined",
+      "description": "Runtime overrides for LLM settings.",
+      "literal_values": [],
+      "name": "llm_overrides",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Enable schema-enforced structured output for LLM extraction.",
+      "literal_values": [],
+      "name": "structured_output",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Enable sparse structured-output quality check with automatic legacy fallback.",
+      "literal_values": [],
+      "name": "structured_sparse_check",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Enable chunking for document processing",
+      "literal_values": [],
+      "name": "use_chunking",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Max tokens per chunk when chunking is used (default: 512).",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "chunk_max_tokens",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "1024",
+      "description": "Max total input tokens per LLM batch in delta extraction.",
+      "literal_values": [],
+      "name": "llm_batch_token_size",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "False",
+      "description": "Enable debug artifacts (controlled by --debug flag)",
+      "literal_values": [],
+      "name": "debug",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "1",
+      "description": "",
+      "literal_values": [],
+      "name": "max_batch_size",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['standard', 'advanced']",
+      "default": "standard",
+      "description": "Preset: 'standard' for typical LLMs; 'advanced' for larger context (more paths per ID-pass call, larger fill batches).",
+      "literal_values": [
+        "standard",
+        "advanced"
+      ],
+      "name": "staged_tuning_preset",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Retries per staged pass when LLM returns invalid JSON (None = use preset).",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "staged_pass_retries",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Parallel workers for extraction (staged fill pass and delta batch calls). None = use preset for staged.",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "parallel_workers",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Drop/repair delta IR nodes with unknown catalog paths.",
+      "literal_values": [],
+      "name": "delta_normalizer_validate_paths",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Canonicalize delta IR identifier values before merge.",
+      "literal_values": [],
+      "name": "delta_normalizer_canonicalize_ids",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Drop nested properties from delta IR nodes/relationships.",
+      "literal_values": [],
+      "name": "delta_normalizer_strip_nested_properties",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Attach batch/chunk provenance to normalized delta IR.",
+      "literal_values": [],
+      "name": "delta_normalizer_attach_provenance",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Enable optional post-merge delta duplicate resolvers.",
+      "literal_values": [],
+      "name": "delta_resolvers_enabled",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['off', 'fuzzy', 'semantic', 'chain']",
+      "default": "semantic",
+      "description": "Resolver mode for delta post-merge dedup.",
+      "literal_values": [
+        "off",
+        "fuzzy",
+        "semantic",
+        "chain"
+      ],
+      "name": "delta_resolvers_mode",
+      "required": false
+    },
+    {
+      "annotation": "<class 'float'>",
+      "default": "0.8",
+      "description": "Similarity threshold for fuzzy post-merge dedup.",
+      "literal_values": [],
+      "name": "delta_resolver_fuzzy_threshold",
+      "required": false
+    },
+    {
+      "annotation": "<class 'float'>",
+      "default": "0.8",
+      "description": "Similarity threshold for semantic post-merge dedup.",
+      "literal_values": [],
+      "name": "delta_resolver_semantic_threshold",
+      "required": false
+    },
+    {
+      "annotation": "list[str] | None",
+      "default": null,
+      "description": "Optional list of property names used for resolver matching.",
+      "literal_values": [
+        "list[str]",
+        "<class 'NoneType'>"
+      ],
+      "name": "delta_resolver_properties",
+      "required": false
+    },
+    {
+      "annotation": "list[str] | None",
+      "default": null,
+      "description": "Optional path allowlist for resolver matching.",
+      "literal_values": [
+        "list[str]",
+        "<class 'NoneType'>"
+      ],
+      "name": "delta_resolver_paths",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "False",
+      "description": "If True, allow resolver to merge nodes with different non-empty ids (content similarity decides). If False, do not merge when both have distinct identity strings.",
+      "literal_values": [],
+      "name": "delta_resolver_allow_merge_different_ids",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Maximum allowed unknown-path drops before delta quality gate fails (-1 disables).",
+      "literal_values": [],
+      "name": "quality_max_unknown_path_drops",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Maximum allowed ID key mismatches before delta quality gate fails (-1 disables).",
+      "literal_values": [],
+      "name": "quality_max_id_mismatch",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Maximum allowed nested property drops before delta quality gate fails (-1 disables).",
+      "literal_values": [],
+      "name": "quality_max_nested_property_drops",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Require root instance in delta quality gate.",
+      "literal_values": [],
+      "name": "delta_quality_require_root",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "20",
+      "description": "Minimum attached nodes required by delta quality gate; below this, fall back to direct extraction.",
+      "literal_values": [],
+      "name": "delta_quality_min_instances",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "4",
+      "description": "Maximum allowed parent lookup misses before delta quality gate fails. Use -1 to disable this check (e.g. for deep or id-sparse schemas).",
+      "literal_values": [],
+      "name": "delta_quality_max_parent_lookup_miss",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Enable adaptive parent_lookup_miss tolerance for delta quality gate.",
+      "literal_values": [],
+      "name": "delta_quality_adaptive_parent_lookup",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Minimum non-empty merged node properties required by delta quality gate (-1 disables).",
+      "literal_values": [],
+      "name": "delta_quality_min_non_empty_properties",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Minimum non-empty scalar root fields required by delta quality gate (-1 disables).",
+      "literal_values": [],
+      "name": "delta_quality_min_root_non_empty_fields",
+      "required": false
+    },
+    {
+      "annotation": "dict[str, int] | None",
+      "default": null,
+      "description": "Optional minimum non-empty property counts per catalog path for delta quality gate (e.g. {'line_items[]': 3}).",
+      "literal_values": [
+        "dict[str, int]",
+        "<class 'NoneType'>"
+      ],
+      "name": "delta_quality_min_non_empty_by_path",
+      "required": false
+    },
+    {
+      "annotation": "<class 'float'>",
+      "default": "-1.0",
+      "description": "Maximum allowed orphan ratio before delta quality gate fails (-1 disables).",
+      "literal_values": [],
+      "name": "delta_quality_max_orphan_ratio",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "-1",
+      "description": "Maximum allowed duplicate canonical identities across paths before delta quality gate fails (-1 disables).",
+      "literal_values": [],
+      "name": "delta_quality_max_canonical_duplicates",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "1",
+      "description": "Maximum split-retry rounds for failed delta batches.",
+      "literal_values": [],
+      "name": "delta_batch_split_max_retries",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Drop entity nodes whose identity value is not in schema allowlist or looks like a section title.",
+      "literal_values": [],
+      "name": "delta_identity_filter_enabled",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "False",
+      "description": "If True, drop any entity node whose identity is not in allowlist; if False, also drop when section-title heuristic matches.",
+      "literal_values": [],
+      "name": "delta_identity_filter_strict",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Run optional second-pass extraction (what did you miss?) for direct and delta contracts.",
+      "literal_values": [],
+      "name": "gleaning_enabled",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "1",
+      "description": "Max gleaning passes (1 = one extra pass). Used when gleaning_enabled is True.",
+      "literal_values": [],
+      "name": "gleaning_max_passes",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Max nodes per LLM call in fill pass (None = use preset).",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "staged_nodes_fill_cap",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Paths per ID-pass call; 0 = single call (None = use preset).",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "staged_id_shard_size",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Discover only identity-bearing paths in ID pass.",
+      "literal_values": [],
+      "name": "staged_id_identity_only",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Use compact ID-pass prompt to reduce token pressure.",
+      "literal_values": [],
+      "name": "staged_id_compact_prompt",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "10",
+      "description": "Auto-shard ID pass when catalog paths exceed this threshold.",
+      "literal_values": [],
+      "name": "staged_id_auto_shard_threshold",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "2",
+      "description": "Minimum split size when retrying failed ID shards.",
+      "literal_values": [],
+      "name": "staged_id_shard_min_size",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "Require root descriptor in staged quality gate.",
+      "literal_values": [],
+      "name": "staged_quality_require_root",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "1",
+      "description": "Minimum ID instances required by staged quality gate.",
+      "literal_values": [],
+      "name": "staged_quality_min_instances",
+      "required": false
+    },
+    {
+      "annotation": "<class 'int'>",
+      "default": "0",
+      "description": "Maximum allowed parent lookup misses before fallback.",
+      "literal_values": [],
+      "name": "staged_quality_max_parent_lookup_miss",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": "16384",
+      "description": "Max tokens for staged ID pass responses. Default 16384 avoids truncation on large catalogs; set to None to use client default.",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "staged_id_max_tokens",
+      "required": false
+    },
+    {
+      "annotation": "int | None",
+      "default": null,
+      "description": "Optional max_tokens override for staged fill calls.",
+      "literal_values": [
+        "<class 'int'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "staged_fill_max_tokens",
+      "required": false
+    },
+    {
+      "annotation": "typing.Literal['csv', 'cypher']",
+      "default": "csv",
+      "description": "",
+      "literal_values": [
+        "csv",
+        "cypher"
+      ],
+      "name": "export_format",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "",
+      "literal_values": [],
+      "name": "export_docling",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "",
+      "literal_values": [],
+      "name": "export_docling_json",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "True",
+      "description": "",
+      "literal_values": [],
+      "name": "export_markdown",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "False",
+      "description": "",
+      "literal_values": [],
+      "name": "export_per_page_markdown",
+      "required": false
+    },
+    {
+      "annotation": "<class 'bool'>",
+      "default": "False",
+      "description": "",
+      "literal_values": [],
+      "name": "reverse_edges",
+      "required": false
+    },
+    {
+      "annotation": "str | pathlib.Path",
+      "default": "outputs",
+      "description": "",
+      "literal_values": [
+        "<class 'str'>",
+        "<class 'pathlib.Path'>"
+      ],
+      "name": "output_dir",
+      "required": false
+    },
+    {
+      "annotation": "bool | None",
+      "default": null,
+      "description": "Control file exports to disk. None (default) = auto-detect: CLI mode exports, API mode doesn't. True = force exports. False = disable exports.",
+      "literal_values": [
+        "<class 'bool'>",
+        "<class 'NoneType'>"
+      ],
+      "name": "dump_to_disk",
+      "required": false
+    }
+  ],
+  "public_entrypoints": [
+    "docling_graph.PipelineConfig",
+    "docling_graph.run_pipeline"
+  ],
+  "sec_presets": [
+    {
+      "backend": "llm",
+      "docling_config": "ocr",
+      "extraction_contract": "direct",
+      "inference": "remote",
+      "name": "llm_direct_text_heavy",
+      "processing_mode": "many-to-one",
+      "structured_output": true,
+      "use_chunking": true
+    },
+    {
+      "backend": "llm",
+      "docling_config": "ocr",
+      "extraction_contract": "staged",
+      "inference": "remote",
+      "name": "llm_staged_large_filing",
+      "processing_mode": "many-to-one",
+      "staged_tuning_preset": "standard",
+      "structured_output": true,
+      "use_chunking": true
+    },
+    {
+      "backend": "llm",
+      "delta_resolvers_enabled": true,
+      "delta_resolvers_mode": "semantic",
+      "docling_config": "ocr",
+      "extraction_contract": "delta",
+      "inference": "remote",
+      "llm_batch_token_size": 2048,
+      "name": "llm_delta_long_filing",
+      "processing_mode": "many-to-one",
+      "use_chunking": true
+    },
+    {
+      "backend": "llm",
+      "extraction_contract": "direct",
+      "inference": "local",
+      "llm_overrides": {
+        "connection": {
+          "base_url": "http://localhost:11434"
+        },
+        "generation": {
+          "temperature": 0.1
+        },
+        "reliability": {
+          "max_retries": 1,
+          "timeout_s": 300
+        }
+      },
+      "model_override": "mistral:7b-instruct",
+      "name": "local_ollama_smoke",
+      "processing_mode": "many-to-one",
+      "provider_override": "ollama",
+      "structured_output": false,
+      "use_chunking": true
+    }
+  ]
+}
