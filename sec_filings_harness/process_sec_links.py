@@ -11,7 +11,12 @@ from typing import Any
 
 from docling_graph import PipelineConfig, run_pipeline
 
-from sec_filings_harness.edgar_api import EdgarClient, FilingLink, load_filing_links, materialize_filing_document
+from sec_filings_harness.edgar_api import (
+    EdgarClient,
+    FilingLink,
+    load_filing_links,
+    materialize_filing_document,
+)
 from sec_filings_harness.library_map import sec_docling_graph_presets
 from sec_filings_harness.sec_template import SecFilingDocument
 
@@ -65,7 +70,9 @@ def provider_ready(config: PipelineConfig) -> bool:
     return True
 
 
-def run_jobs(links: list[FilingLink], output_root: Path, *, limit: int | None) -> list[dict[str, Any]]:
+def run_jobs(
+    links: list[FilingLink], output_root: Path, *, limit: int | None
+) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
     count = 0
     client = EdgarClient()
@@ -121,7 +128,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare or run docling-graph SEC filing jobs.")
     parser.add_argument("--links", type=Path, default=Path("data") / "sec_filing_links.json")
     parser.add_argument("--output-root", type=Path, default=Path("outputs") / "sec_filings")
-    parser.add_argument("--plan-out", type=Path, default=Path("data") / "docling_graph_sec_run_plan.json")
+    parser.add_argument(
+        "--plan-out", type=Path, default=Path("data") / "docling_graph_sec_run_plan.json"
+    )
     parser.add_argument("--run", action="store_true", help="Actually run docling-graph jobs.")
     parser.add_argument("--limit", type=int, default=None, help="Limit actual runs.")
     args = parser.parse_args()

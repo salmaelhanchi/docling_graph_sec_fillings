@@ -189,7 +189,9 @@ def _filing_link(company: Company, row: dict[str, str], period_bucket: str) -> F
     )
 
 
-def choose_filing(company: Company, rows: list[dict[str, str]], form: str, period_bucket: str) -> FilingLink | None:
+def choose_filing(
+    company: Company, rows: list[dict[str, str]], form: str, period_bucket: str
+) -> FilingLink | None:
     candidates = [
         row
         for row in rows

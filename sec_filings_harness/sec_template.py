@@ -27,8 +27,12 @@ class FilingPeriod(BaseModel):
     model_config = ConfigDict(is_entity=False, extra="ignore")
 
     fiscal_year: str | None = Field(default=None, description="Fiscal year covered by the filing.")
-    period_end_date: str | None = Field(default=None, description="Period end date in ISO format when available.")
-    filing_date: str | None = Field(default=None, description="SEC filing date in ISO format when available.")
+    period_end_date: str | None = Field(
+        default=None, description="Period end date in ISO format when available."
+    )
+    filing_date: str | None = Field(
+        default=None, description="SEC filing date in ISO format when available."
+    )
 
 
 class BusinessSegment(BaseModel):
@@ -36,15 +40,21 @@ class BusinessSegment(BaseModel):
 
     name: str = Field(description="Business segment, product line, or geography.")
     description: str | None = Field(default=None, description="Concise segment description.")
-    revenue: str | None = Field(default=None, description="Reported revenue amount with unit and currency.")
+    revenue: str | None = Field(
+        default=None, description="Reported revenue amount with unit and currency."
+    )
 
 
 class RiskFactor(BaseModel):
     model_config = ConfigDict(graph_id_fields=["name"], extra="ignore")
 
     name: str = Field(description="Short name for the risk factor.")
-    category: str | None = Field(default=None, description="Risk category, such as market, legal, cyber, or liquidity.")
-    description: str | None = Field(default=None, description="Specific risk described by management.")
+    category: str | None = Field(
+        default=None, description="Risk category, such as market, legal, cyber, or liquidity."
+    )
+    description: str | None = Field(
+        default=None, description="Specific risk described by management."
+    )
 
 
 class FinancialMetric(BaseModel):
@@ -60,7 +70,9 @@ class SecFilingDocument(BaseModel):
 
     model_config = ConfigDict(graph_id_fields=["accession_number"], extra="ignore")
 
-    accession_number: str = Field(description="SEC accession number, or document accession if visible.")
+    accession_number: str = Field(
+        description="SEC accession number, or document accession if visible."
+    )
     form_type: str = Field(description="SEC form type, for example 10-K, 10-Q, or 20-F.")
     title: str | None = Field(default=None, description="Document title.")
     company: CompanyIdentity | None = edge(
@@ -88,4 +100,3 @@ class SecFilingDocument(BaseModel):
         default_factory=list,
         description="Key financial metrics reported in the filing.",
     )
-

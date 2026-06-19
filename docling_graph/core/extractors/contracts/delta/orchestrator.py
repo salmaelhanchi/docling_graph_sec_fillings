@@ -560,8 +560,7 @@ class DeltaOrchestrator:
         catalog_block = build_catalog_prompt_block(self._catalog)
         catalog_paths = self._catalog.paths()
         self._log_progress(
-            "Prepared delta schema catalog with "
-            f"[cyan]{len(catalog_paths)}[/cyan] paths"
+            f"Prepared delta schema catalog with [cyan]{len(catalog_paths)}[/cyan] paths"
         )
         global_context: str | None = None
         if chunks:
@@ -709,8 +708,7 @@ class DeltaOrchestrator:
         # Optional gleaning pass: run batches again with "already found" in prompt, merge extra results
         if self._config.gleaning_enabled and self._config.gleaning_max_passes >= 1:
             self._log_progress(
-                "Starting delta gleaning pass over "
-                f"[cyan]{len(batch_plan)}[/cyan] batches"
+                f"Starting delta gleaning pass over [cyan]{len(batch_plan)}[/cyan] batches"
             )
             already_found = build_already_found_summary_delta(merged_graph)
             gleaning_results: list[dict[str, Any]] = []
@@ -871,8 +869,7 @@ class DeltaOrchestrator:
 
         if not quality_ok:
             self._log_progress(
-                "Quality gate failed: "
-                f"[yellow]{', '.join(quality_reasons)}[/yellow]"
+                f"Quality gate failed: [yellow]{', '.join(quality_reasons)}[/yellow]"
             )
             logger.warning(
                 "[DeltaExtraction] Quality gate failed: %s | path_counts=%s | normalizer_stats=%s",

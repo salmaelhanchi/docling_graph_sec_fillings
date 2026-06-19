@@ -32,7 +32,9 @@ def discover_pipeline_config_fields() -> list[dict[str, Any]]:
                 "name": name,
                 "annotation": str(field.annotation),
                 "default": None if field.default is None else str(field.default),
-                "literal_values": [str(value) for value in annotation_args] if annotation_args else [],
+                "literal_values": [str(value) for value in annotation_args]
+                if annotation_args
+                else [],
                 "required": field.is_required(),
                 "description": field.description or "",
             }
