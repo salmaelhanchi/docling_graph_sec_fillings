@@ -558,9 +558,10 @@ class DeltaOrchestrator:
         schema_dict = self._template.model_json_schema()
         semantic_guide = build_delta_semantic_guide(self._template, schema_dict)
         catalog_block = build_catalog_prompt_block(self._catalog)
+        catalog_paths = self._catalog.paths()
         self._log_progress(
             "Prepared delta schema catalog with "
-            f"[cyan]{len(self._catalog.paths)}[/cyan] paths"
+            f"[cyan]{len(catalog_paths)}[/cyan] paths"
         )
         global_context: str | None = None
         if chunks:
